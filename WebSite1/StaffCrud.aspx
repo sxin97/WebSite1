@@ -24,8 +24,8 @@
                             <asp:Image ID="Image1" runat="server" ImageUrl='<%# Bind("StaffProfile") %>' Height="100px" Width="100px" />
                         </ItemTemplate>
                         <EditItemTemplate>
-                            <asp:FileUpload ID="FileUpload1" runat="server"/>
-                            <asp:TextBox ID="FileName" runat="server"></asp:TextBox>
+                            <asp:FileUpload ID="FileUpload1" runat="server"></asp:FileUpload>
+                            
                         </EditItemTemplate>
                         <FooterTemplate>
                             <asp:FileUpload ID="FileUpload2" runat="server" />

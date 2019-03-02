@@ -14,7 +14,7 @@ public partial class _Default : System.Web.UI.Page
     string sortItem = "StudentName";
     protected void Page_Load(object sender, EventArgs e)
     {
-        TextBoxSearch.Attributes.Add("onKeyUp", "load()");
+        //TextBoxSearch.Attributes.Add("onKeyUp", "load()");
         //load_data();
         if (!this.IsPostBack)
         {
@@ -35,12 +35,28 @@ public partial class _Default : System.Web.UI.Page
     }
     public void load_data()
     {
+        string searchBox;
+        if (TextBoxSearch.Text == "")
+            searchBox = " ";
+        else
+            searchBox = TextBoxSearch.Text;
+
+        if (DropDownList3.SelectedValue == "Ascending")
+        {
+            sortDirection = "ASC";
+            sortItem = DropDownList2.SelectedValue;
+        }
+        else if (DropDownList3.SelectedValue == "Descending")
+        {
+            sortDirection = "DESC";
+            sortItem = DropDownList2.SelectedValue;
+        }
 
         SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["UniversityDBConnectionString"].ConnectionString);
         conn.Open();
-        string selectQuery = "SELECT * FROM [Student] WHERE ([StudentName] LIKE '%' + @StudentName + '%') ORDER BY " +"["+sortItem+"] "+ sortDirection ;
+        string selectQuery = "SELECT * FROM Student WHERE (StudentName LIKE '%' + @StudentName + '%') ORDER BY " +sortItem+" "+ sortDirection ;
         SqlCommand cmd = new SqlCommand(selectQuery, conn);
-        cmd.Parameters.AddWithValue("@StudentName", TextBoxSearch.Text);
+        cmd.Parameters.AddWithValue("@StudentName", searchBox);
         //cmd.ExecuteNonQuery();
 
         DataTable dt = new DataTable();
@@ -68,6 +84,7 @@ public partial class _Default : System.Web.UI.Page
 
         //SqlDataSource1.InsertParameters["GroupCode"].DefaultValue = ((DropDownList)GridView1.FooterRow.FindControl("DropDownListGroupCode")).SelectedValue;
         //SqlDataSource1.Insert();
+        Boolean trigger = false;
 
         string id = ((TextBox)GridView1.FooterRow.FindControl("TextBoxID")).Text;
         string name = ((TextBox)GridView1.FooterRow.FindControl("TextBoxName")).Text;
@@ -76,24 +93,65 @@ public partial class _Default : System.Web.UI.Page
         string email = ((TextBox)GridView1.FooterRow.FindControl("TextBoxEmail")).Text;
         string groupcode = ((DropDownList)GridView1.FooterRow.FindControl("DropDownListGroupCode")).SelectedValue.ToString();
 
-        SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["UniversityDBConnectionString"].ConnectionString);
-        conn.Open();
-        string insertQuery = "insert into Student values (@id, @name, @pass, @phone, @email, @group)";
-        SqlCommand cmd = new SqlCommand(insertQuery, conn);
-        cmd.Parameters.AddWithValue("@id", id);
-        cmd.Parameters.AddWithValue("@name", name);
-        cmd.Parameters.AddWithValue("@pass", pass);
-        cmd.Parameters.AddWithValue("@phone", phone);
-        cmd.Parameters.AddWithValue("@email", email);
-        cmd.Parameters.AddWithValue("@group", groupcode);
+        if (id == "")
+        {
+            Response.Write("<script>alert('Please input all the field!');</script>");
+            trigger = true;
+        }
+        if (name == "")
+        {
+            if (!trigger)
+            {
+                Response.Write("<script>alert('Please input all the field!');</script>");
+                trigger = true;
+            }
+        }
+        if (pass == "")
+        {
+            if (!trigger)
+            {
+                Response.Write("<script>alert('Please input all the field!');</script>");
+                trigger = true;
+            }
+        }
+        if(phone == "")
+        {
+            if (!trigger)
+            {
+                Response.Write("<script>alert('Please input all the field!');</script>");
+                trigger = true;
+            }
+        }
+        if(email == "")
+        {
+            if (!trigger)
+            {
+                Response.Write("<script>alert('Please input all the field!');</script>");
+                trigger = true;
+            }
+        }
 
-        cmd.ExecuteNonQuery();
-        conn.Close();
+        if (!trigger)
+        {
+            SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["UniversityDBConnectionString"].ConnectionString);
+            conn.Open();
+            string insertQuery = "insert into Student values (@id, @name, @pass, @phone, @email, @group, @delete)";
+            SqlCommand cmd = new SqlCommand(insertQuery, conn);
+            cmd.Parameters.AddWithValue("@id", id);
+            cmd.Parameters.AddWithValue("@name", name);
+            cmd.Parameters.AddWithValue("@pass", pass);
+            cmd.Parameters.AddWithValue("@phone", phone);
+            cmd.Parameters.AddWithValue("@email", email);
+            cmd.Parameters.AddWithValue("@group", groupcode);
+            cmd.Parameters.AddWithValue("@delete", 0);
 
-        //GridView1.DataSourceID = null;
-        load_data();
-        //load_data();
-        
+            cmd.ExecuteNonQuery();
+            conn.Close();
+
+            //GridView1.DataSourceID = null;
+            load_data();
+            //load_data();
+        }
     }
 
 
@@ -102,6 +160,7 @@ public partial class _Default : System.Web.UI.Page
     protected void TextBoxPaging_TextChanged(object sender, EventArgs e)
     {
         GridView1.PageSize = Convert.ToInt32(TextBoxPaging.Text);
+        load_data();
     }
 
     protected void TextBoxSearch_TextChanged(object sender, EventArgs e)
@@ -127,7 +186,7 @@ public partial class _Default : System.Web.UI.Page
     {
         GridView1.EditIndex = e.NewEditIndex;
         //GridView1.DataSourceID = null;
-        //load_data();
+        load_data();
     }
 
     protected void GridView1_RowUpdating(object sender, GridViewUpdateEventArgs e)
@@ -145,15 +204,16 @@ public partial class _Default : System.Web.UI.Page
         cmd.ExecuteNonQuery();
         conn.Close();
 
-        GridView1.DataSourceID = null;
-        load_data();
+  
 
         GridView1.EditIndex = -1;
+        load_data();
     }
 
     protected void GridView1_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
     {
         GridView1.EditIndex = -1;
+        load_data();
     }
 
     protected void ButtonSearch_Click(object sender, EventArgs e)
@@ -167,7 +227,14 @@ public partial class _Default : System.Web.UI.Page
     protected void DropDownList2_SelectedIndexChanged(object sender, EventArgs e)
     {
         sortItem = DropDownList2.SelectedValue;
-        
+        if (DropDownList3.SelectedValue == "Ascending")
+        {
+            sortDirection = "ASC";
+        }
+        else if (DropDownList3.SelectedValue == "Descending")
+        {
+            sortDirection = "DESC";
+        }
 
         load_data();
     }
@@ -177,10 +244,12 @@ public partial class _Default : System.Web.UI.Page
         if (DropDownList3.SelectedValue == "Ascending")
         {
             sortDirection = "ASC";
+            sortItem = DropDownList2.SelectedValue;
         }
-        else
+        else if(DropDownList3.SelectedValue == "Descending")
         {
             sortDirection = "DESC";
+            sortItem = DropDownList2.SelectedValue;
         }
         load_data();
     }

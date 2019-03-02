@@ -102,17 +102,23 @@ public partial class StaffCrud : System.Web.UI.Page
     {
         ((FileUpload)GridView1.Rows[e.RowIndex].FindControl("FileUpload1")).SaveAs(Server.MapPath("~/Images/" + ((FileUpload)GridView1.Rows[e.RowIndex].FindControl("FileUpload1")).FileName));
 
+        string filename = "~/Images/" + ((FileUpload)GridView1.Rows[e.RowIndex].FindControl("FileUpload1")).FileName;
+        string name = ((TextBox)GridView1.Rows[e.RowIndex].FindControl("TextBox1")).Text;
+        string phone = ((TextBox)GridView1.Rows[e.RowIndex].FindControl("TextBox2")).Text;
+        string email = ((TextBox)GridView1.Rows[e.RowIndex].FindControl("TextBox3")).Text;
+        string id = ((Label)GridView1.Rows[e.RowIndex].FindControl("Label1")).Text;
+
         SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["UniversityDBConnectionString"].ConnectionString);
         conn.Open();
         string updateQuery = "update Staff set StaffProfile = @profile, StaffName = @name, StaffPhone = @phone, StaffEmail = @email where StaffId = @staffid";
         SqlCommand cmd = new SqlCommand(updateQuery, conn);
-        cmd.Parameters.AddWithValue("@profile", "~/Images/" + ((FileUpload)GridView1.Rows[e.RowIndex].FindControl("FileUpload1")).FileName);
-        cmd.Parameters.AddWithValue("@name", ((TextBox)GridView1.Rows[e.RowIndex].FindControl("TextBox1")).Text);
-        cmd.Parameters.AddWithValue("@phone", ((TextBox)GridView1.Rows[e.RowIndex].FindControl("TextBox2")).Text);
-        cmd.Parameters.AddWithValue("@email", ((TextBox)GridView1.Rows[e.RowIndex].FindControl("TextBox3")).Text);
-        cmd.Parameters.AddWithValue("@staffid", ((Label)GridView1.Rows[e.RowIndex].FindControl("Label1")).Text);
+        cmd.Parameters.AddWithValue("@profile", filename);
+        cmd.Parameters.AddWithValue("@name", name);
+        cmd.Parameters.AddWithValue("@phone", phone);
+        cmd.Parameters.AddWithValue("@email", email);
+        cmd.Parameters.AddWithValue("@staffid", id);
 
-
+        //string test = filename;
         cmd.ExecuteNonQuery();
         conn.Close();
 

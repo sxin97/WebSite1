@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" UnobtrusiveValidationMode="None" MasterPageFile="~/MasterPage.master" EnableViewState="false" AutoEventWireup="true" CodeFile="Default.aspx.cs" Inherits="_Default" %>
+﻿<%@ Page Language="C#" UnobtrusiveValidationMode="None" MasterPageFile="~/MasterPage.master" EnableViewState="true" AutoEventWireup="true" CodeFile="Default.aspx.cs" Inherits="_Default" %>
 
 <%--<!DOCTYPE html>--%>
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
@@ -40,10 +40,11 @@
 
             &nbsp;&nbsp;&nbsp; Sort :
             <asp:DropDownList ID="DropDownList2" runat="server" BackColor="#efefef" OnSelectedIndexChanged="DropDownList2_SelectedIndexChanged" AutoPostBack="true">
-                <asp:ListItem Selected="True">--Select--</asp:ListItem>
                 <asp:ListItem>StudentName</asp:ListItem>
                 <asp:ListItem>StudentId</asp:ListItem>
                 <asp:ListItem>GroupCode</asp:ListItem>
+                <asp:ListItem>StudentEmail</asp:ListItem>
+                <asp:ListItem>StudentPhone</asp:ListItem>
             </asp:DropDownList>
 
             
@@ -52,7 +53,6 @@
 
             &nbsp;Order :
             <asp:DropDownList ID="DropDownList3" runat="server" BackColor="#efefef" AutoPostBack="true" OnSelectedIndexChanged="DropDownList3_SelectedIndexChanged">
-                <asp:ListItem Selected="True">--Select--</asp:ListItem>
                 <asp:ListItem>Ascending</asp:ListItem>
                 <asp:ListItem>Descending</asp:ListItem>
             </asp:DropDownList>
@@ -76,15 +76,15 @@
                         </ItemTemplate>
                         <FooterTemplate>
                             <asp:TextBox ID="TextBoxID" BackColor="#efefef" runat="server"></asp:TextBox>
-                            <asp:RequiredFieldValidator ID="RequiredFieldValidatorID" runat="server" ErrorMessage="ID is required" Text="*" ForeColor="Red" ControlToValidate="TextBoxID" ValidationGroup="insertGroup">
-                            </asp:RequiredFieldValidator>
+                            <%--<asp:RequiredFieldValidator ID="RequiredFieldValidatorID" runat="server" ErrorMessage="ID is required" Text="*" ForeColor="Red" ControlToValidate="TextBoxID" ValidationGroup="insertGroup">
+                            </asp:RequiredFieldValidator>--%>
                         </FooterTemplate>
                     </asp:TemplateField>
                     <asp:TemplateField HeaderText="StudentName" SortExpression="StudentName">
                         <EditItemTemplate>
                             <asp:TextBox ID="TextBox1" BackColor="#efefef" runat="server" Text='<%# Bind("StudentName") %>'></asp:TextBox>
-                            <asp:RequiredFieldValidator ID="RequiredFieldValidatorName2" runat="server" ErrorMessage="Name is required" Text="*" ForeColor="Red" ControlToValidate="TextBox1">
-                            </asp:RequiredFieldValidator>
+                            <%--<asp:RequiredFieldValidator ID="RequiredFieldValidatorName2" runat="server" ErrorMessage="Name is required" Text="*" ForeColor="Red" ControlToValidate="TextBox1">
+                            </asp:RequiredFieldValidator>--%>
                         </EditItemTemplate>
                         <ItemTemplate>
                             <asp:Label ID="Label2" runat="server" Text='<%# Bind("StudentName") %>'></asp:Label>
@@ -176,7 +176,7 @@
             </asp:GridView>
             <br />
             <br />
-            <asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:UniversityDBConnectionString %>" DeleteCommand="DELETE FROM [Student] WHERE [StudentId] = @StudentId" InsertCommand="INSERT INTO [Student] ([StudentId], [StudentName], [StudentPass], [StudentPhone], [StudentEmail], [GroupCode]) VALUES (@StudentId, @StudentName, @StudentPass, @StudentPhone, @StudentEmail, @GroupCode)" SelectCommand="SELECT * FROM [Student] WHERE ([StudentName] LIKE '%' + @StudentName + '%') ORDER BY [StudentName]" UpdateCommand="UPDATE [Student] SET [StudentName] = @StudentName, [StudentPass] = @StudentPass, [StudentPhone] = @StudentPhone, [StudentEmail] = @StudentEmail, [GroupCode] = @GroupCode WHERE [StudentId] = @StudentId">
+            <%--<asp:SqlDataSource ID="SqlDataSource1" runat="server" ConnectionString="<%$ ConnectionStrings:UniversityDBConnectionString %>" DeleteCommand="DELETE FROM [Student] WHERE [StudentId] = @StudentId" InsertCommand="INSERT INTO [Student] ([StudentId], [StudentName], [StudentPass], [StudentPhone], [StudentEmail], [GroupCode]) VALUES (@StudentId, @StudentName, @StudentPass, @StudentPhone, @StudentEmail, @GroupCode)" SelectCommand="SELECT * FROM [Student] WHERE ([StudentName] LIKE '%' + @StudentName + '%') ORDER BY [StudentName]" UpdateCommand="UPDATE [Student] SET [StudentName] = @StudentName, [StudentPass] = @StudentPass, [StudentPhone] = @StudentPhone, [StudentEmail] = @StudentEmail, [GroupCode] = @GroupCode WHERE [StudentId] = @StudentId">
                 <DeleteParameters>
                     <asp:Parameter Name="StudentId" Type="String" />
                 </DeleteParameters>
@@ -199,7 +199,7 @@
                     <asp:Parameter Name="GroupCode" Type="String" />
                     <asp:Parameter Name="StudentId" Type="String" />
                 </UpdateParameters>
-            </asp:SqlDataSource>
+            </asp:SqlDataSource>--%>
             <br />
             
             <asp:ValidationSummary ID="ValidationSummary1" runat="server" BorderStyle="None" ForeColor="#FF3300" ValidationGroup="insertGroup" />
