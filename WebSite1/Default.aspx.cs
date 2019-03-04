@@ -28,11 +28,7 @@ public partial class _Default : System.Web.UI.Page
     //     int startRowIndex
     //     out int totalRowCount
     //     string sortByExpression
-    public IQueryable GridView1_GetData()
-    {
-        DatabaseEntities _db = new DatabaseEntities();
-        return _db.Students;
-    }
+    
     public void load_data()
     {
         string searchBox;
